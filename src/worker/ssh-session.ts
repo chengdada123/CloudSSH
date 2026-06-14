@@ -343,6 +343,10 @@ export class SSHSession {
     );
     console.log('[KEX] Exchange hash hex=' + Array.from(H).map(b => b.toString(16).padStart(2, '0')).join(''));
     console.log('[KEX] sharedSecret hex=' + Array.from(sharedSecret).map(b => b.toString(16).padStart(2, '0')).join(''));
+    console.log('[KEX] hostKey hex=' + Array.from(hostKey).map(b => b.toString(16).padStart(2, '0')).join(''));
+    console.log('[KEX] signature hex=' + Array.from(signature).map(b => b.toString(16).padStart(2, '0')).join(''));
+    console.log('[KEX] clientPubKey hex=' + Array.from(this.ecdhRawPublicKey).map(b => b.toString(16).padStart(2, '0')).join(''));
+    console.log('[KEX] serverPubKey hex=' + Array.from(serverRawPublicKey).map(b => b.toString(16).padStart(2, '0')).join(''));
 
     if (!this.sessionID) {
       this.sessionID = H;
