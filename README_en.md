@@ -154,3 +154,8 @@ This project is open-sourced under the [MIT License](LICENSE).
 **Special Notice**: Commercial use and modifications are permitted, but you must clearly attribute the original author.
 
 Issues and Pull Requests are welcome to help build the community. If you find this project helpful, please consider giving it a ⭐ Star. Thank you very much for your support!
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=newbietan/CloudSSH&type=Date)](https://star-history.com/#newbietan/CloudSSH&Date)
+

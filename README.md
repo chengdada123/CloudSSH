@@ -154,3 +154,8 @@ npm run dev
 **特别声明**：本项目允许商业使用及二次修改，但必须明确注明原作者。
 
 欢迎提交 Issue 和 Pull Request 共建社区。如果这个项目对你有帮助，恳求大家给本项目点个 ⭐ Star 支持一下，非常感谢！
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=newbietan/CloudSSH&type=Date)](https://star-history.com/#newbietan/CloudSSH&Date)
+
