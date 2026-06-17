@@ -399,9 +399,14 @@ export class SSHSession {
     // Verify host key signature to confirm exchange hash is correct
     try {
       const sigVerified = await this.verifyHostKeySignature(hostKey, signature, H);
-      this.sendDebug(`Host key signature verification: ${sigVerified ? 'PASS' : 'FAIL'}`);
-      if (!sigVerified) {
-        this.sendError('主机密钥签名验证失败 - Exchange Hash 计算可能有误');
+      if (sigVerified === null) {
+        this.sendDebug('Host key signature verification: UNSUPPORTED ALGORITHM');
+        this.sendStatus('主机密钥签名验证被跳过（暂不支持该算法，但不影响连接）');
+      } else {
+        this.sendDebug(`Host key signature verification: ${sigVerified ? 'PASS' : 'FAIL'}`);
+        if (!sigVerified) {
+          this.sendError('主机密钥签名验证失败 - 可能会有安全风险或 Exchange Hash 计算错误，但不阻断连接。');
+        }
       }
     } catch (e) {
       const errMsg = e instanceof Error ? e.message : String(e);
@@ -421,7 +426,7 @@ export class SSHSession {
     hostKeyBlob: Uint8Array,
     signatureBlob: Uint8Array,
     exchangeHash: Uint8Array
-  ): Promise<boolean> {
+  ): Promise<boolean | null> {
     // Parse host key blob to get key type and raw key
     let offset = 0;
     const keyTypeLen = (hostKeyBlob[offset] << 24) | (hostKeyBlob[offset+1] << 16) |
@@ -494,10 +499,70 @@ export class SSHSession {
         ecdsaRawSig,
         exchangeHash
       );
+    } else if (keyType === 'ssh-rsa') {
+      // Parse RSA key
+      const eLen = (hostKeyBlob[offset] << 24) | (hostKeyBlob[offset+1] << 16) |
+                   (hostKeyBlob[offset+2] << 8) | hostKeyBlob[offset+3];
+      offset += 4;
+      const eRaw = hostKeyBlob.slice(offset, offset + eLen);
+      offset += eLen;
+      
+      const nLen = (hostKeyBlob[offset] << 24) | (hostKeyBlob[offset+1] << 16) |
+                   (hostKeyBlob[offset+2] << 8) | hostKeyBlob[offset+3];
+      offset += 4;
+      const nRaw = hostKeyBlob.slice(offset, offset + nLen);
+      
+      // Determine hash algorithm based on signature type
+      let hashAlgo = 'SHA-1';
+      if (sigType === 'rsa-sha2-256') hashAlgo = 'SHA-256';
+      else if (sigType === 'rsa-sha2-512') hashAlgo = 'SHA-512';
+      
+      this.sendDebug(`RSA public key: n=${nRaw.length} bytes, e=${eRaw.length} bytes, hash=${hashAlgo}`);
+
+      // Convert to JWK format for import
+      const jwk = {
+        kty: "RSA",
+        e: this.base64UrlEncodeUnsigned(eRaw),
+        n: this.base64UrlEncodeUnsigned(nRaw),
+        ext: true
+      };
+
+      try {
+        const pubKey = await crypto.subtle.importKey(
+          'jwk',
+          jwk,
+          { name: 'RSASSA-PKCS1-v1_5', hash: hashAlgo },
+          false,
+          ['verify']
+        );
+
+        return await crypto.subtle.verify(
+          'RSASSA-PKCS1-v1_5',
+          pubKey,
+          rawSig,
+          exchangeHash
+        );
+      } catch (e) {
+         this.sendDebug(`RSA import/verify error: ${e}`);
+         return false;
+      }
     }
 
     this.sendDebug(`Unsupported key type for verification: ${keyType}`);
-    return false;
+    return null; // Return null for unsupported algorithms instead of failing
+  }
+
+  // Convert Uint8Array to base64url string without leading zero bytes (useful for JWK mpint)
+  private base64UrlEncodeUnsigned(buffer: Uint8Array): string {
+    let start = 0;
+    while (start < buffer.length - 1 && buffer[start] === 0x00) {
+      start++;
+    }
+    let binary = '';
+    for (let i = start; i < buffer.length; i++) {
+      binary += String.fromCharCode(buffer[i]);
+    }
+    return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   }
 
   private convertSSHECDSASig(sshSig: Uint8Array): Uint8Array {
