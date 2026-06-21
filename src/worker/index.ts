@@ -203,6 +203,10 @@ export default {
         return handleTokenSSHConnection(request, env, connectToken);
       }
 
+      if (env.ALLOW_ANONYMOUS_SSH !== 'true') {
+        return Response.json({ error: 'Anonymous SSH is disabled' }, { status: 403 });
+      }
+
       // Verify Turnstile if secret is configured
       if (env.TURNSTILE_SECRET) {
         // Check if user has a valid verification cookie
@@ -236,6 +240,7 @@ export default {
         turnstileEnabled: !!env.TURNSTILE_SECRET,
         sitekey: env.TURNSTILE_SITEKEY || '',
         githubAuthEnabled: !!env.GITHUB_CLIENT_ID,
+        anonymousSshEnabled: env.ALLOW_ANONYMOUS_SSH === 'true',
       });
     }
 

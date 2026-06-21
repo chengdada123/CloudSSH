@@ -173,7 +173,7 @@ export class SSHSessionDO {
 
       await socket.opened;
 
-      const session = new SSHSession(ws, socket, config);
+      const session = new SSHSession(ws, socket, config, this.env);
       this.sessions.set(ws, session);
 
       await session.startHandshake();

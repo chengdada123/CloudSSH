@@ -60,6 +60,8 @@ export interface Env {
   GITHUB_CLIENT_SECRET?: string;
   SESSION_SECRET?: string;
   BASE_URL?: string;
+  ALLOW_ANONYMOUS_SSH?: string;
+  ALLOW_UNVERIFIED_HOSTKEY?: string;
 }
 
 export interface UserInfo {

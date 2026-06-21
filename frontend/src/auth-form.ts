@@ -1,4 +1,4 @@
-﻿import { SSHTerminal } from './terminal';
+import { SSHTerminal } from './terminal';
 
 // --- Credential encryption helpers ---
 async function deriveKey(salt: Uint8Array): Promise<CryptoKey> {
@@ -47,6 +47,7 @@ export class ConnectionForm {
   private turnstileVerified = false;
   private turnstileWidgetId: string | null = null;
   private turnstileSitekey = '';
+  private anonymousSshEnabled = true;
 
   constructor(terminal: SSHTerminal) {
     this.terminal = terminal;
@@ -62,9 +63,11 @@ export class ConnectionForm {
         turnstileEnabled: boolean;
         sitekey: string;
         githubAuthEnabled: boolean;
+        anonymousSshEnabled?: boolean;
       };
       this.turnstileEnabled = config.turnstileEnabled;
       this.turnstileSitekey = config.sitekey;
+      this.anonymousSshEnabled = config.anonymousSshEnabled !== false;
       if (this.turnstileEnabled && this.turnstileSitekey) {
         this.renderTurnstile();
       }
@@ -72,8 +75,31 @@ export class ConnectionForm {
       if (config.githubAuthEnabled) {
         this.renderGitHubLoginButton();
       }
+      this.updateAnonymousSshAvailability(config.githubAuthEnabled);
     } catch {
       // Config endpoint not available, skip Turnstile
+    }
+  }
+
+  private updateAnonymousSshAvailability(githubAuthEnabled: boolean): void {
+    if (this.anonymousSshEnabled) return;
+
+    const form = document.getElementById('connection-form') as HTMLFormElement | null;
+    const connectBtn = document.getElementById('connect-btn') as HTMLButtonElement | null;
+    const status = document.getElementById('status-text');
+
+    form?.querySelectorAll('input, textarea, button').forEach((element) => {
+      const control = element as HTMLInputElement | HTMLTextAreaElement | HTMLButtonElement;
+      if (control.id !== 'github-login-btn') control.disabled = true;
+    });
+
+    if (connectBtn) {
+      connectBtn.disabled = true;
+      connectBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size: 18px;">lock</span> Login required';
+    }
+
+    if (status) {
+      status.textContent = githubAuthEnabled ? 'Login with GitHub to use saved servers.' : 'Anonymous SSH is disabled.';
     }
   }
 
@@ -261,6 +287,11 @@ export class ConnectionForm {
   }
 
   private async handleConnect(): Promise<void> {
+    if (!this.anonymousSshEnabled) {
+      alert('匿名 SSH 已禁用，请登录后从服务器列表连接。');
+      return;
+    }
+
     const hostInput = (document.getElementById('host') as HTMLInputElement).value;
     const host = hostInput.replace(/^\[|\]$/g, '').trim();
     const port = parseInt(

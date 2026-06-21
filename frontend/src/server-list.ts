@@ -1,4 +1,4 @@
-﻿import { SSHTerminal } from './terminal';
+import { SSHTerminal } from './terminal';
 
 interface UserInfo {
   id: number;
@@ -57,10 +57,18 @@ export class ServerList {
     const container = document.getElementById('user-info');
     if (!container) return;
 
-    container.innerHTML = `
-      <img src="${this.user.avatar_url}" alt="${this.user.username}" class="user-avatar w-8 h-8" />
-      <span class="text-xs font-bold tracking-[0.1em] text-[#94a3b8]">${this.user.username}</span>
-    `;
+    container.textContent = '';
+
+    const avatar = document.createElement('img');
+    avatar.src = this.user.avatar_url;
+    avatar.alt = this.user.username;
+    avatar.className = 'user-avatar w-8 h-8';
+
+    const username = document.createElement('span');
+    username.className = 'text-xs font-bold tracking-[0.1em] text-[#94a3b8]';
+    username.textContent = this.user.username;
+
+    container.append(avatar, username);
   }
 
   // ==================== 浜嬩欢缁戝畾 ====================
