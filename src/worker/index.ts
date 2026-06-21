@@ -131,9 +131,12 @@ function getUserDBStub(env: Env): DurableObjectStub {
   return env.USER_DB.get(id);
 }
 
-export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
-    const url = new URL(request.url);
+function jsonError(message: string, status = 500): Response {
+  return Response.json({ error: message }, { status });
+}
+
+async function handleRequest(request: Request, env: Env): Promise<Response> {
+  const url = new URL(request.url);
 
     // ==================== Auth Routes ====================
 
@@ -257,6 +260,31 @@ export default {
         'Strict-Transport-Security': 'max-age=31536000; includeSubDomains'
       }
     });
+}
+
+export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    try {
+      return await handleRequest(request, env);
+    } catch (error) {
+      const url = new URL(request.url);
+      const message = error instanceof Error ? error.message : String(error);
+      console.error('[Worker] Unhandled error:', message);
+
+      if (url.pathname.startsWith('/api/')) {
+        return jsonError(message);
+      }
+
+      return new Response(HTML, {
+        headers: {
+          'Content-Type': 'text/html;charset=UTF-8',
+          'X-Content-Type-Options': 'nosniff',
+          'X-Frame-Options': 'DENY',
+          'Referrer-Policy': 'strict-origin-when-cross-origin',
+          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains'
+        }
+      });
+    }
   },
 };
 
