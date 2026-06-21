@@ -22,6 +22,13 @@ export const THEMES = {
     cursorAccent: '#0f172a',
     selectionBackground: '#273747',
   },
+  light: {
+    background: '#f8fafc',
+    foreground: '#0f172a',
+    cursor: '#2563eb',
+    cursorAccent: '#ffffff',
+    selectionBackground: '#cbd5e1',
+  },
   glacier: {
     background: '#0a192f',
     foreground: '#64ffda',
@@ -86,6 +93,10 @@ export class SSHTerminal {
 
   setTheme(themeName: keyof typeof THEMES): void {
     this.terminal.options.theme = THEMES[themeName];
+  }
+
+  setColorMode(mode: 'light' | 'dark'): void {
+    this.terminal.options.theme = mode === 'light' ? THEMES.light : THEMES.default;
   }
 
   mount(): void {

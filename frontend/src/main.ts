@@ -8,6 +8,29 @@ const terminal = new SSHTerminal('terminal-container');
 let connectionForm: ConnectionForm | null = null;
 let serverList: ServerList | null = null;
 let isLoggedIn = false;
+let colorMode: 'light' | 'dark' = 'dark';
+
+function getInitialColorMode(): 'light' | 'dark' {
+  const saved = localStorage.getItem('cloudssh_color_mode');
+  if (saved === 'light' || saved === 'dark') return saved;
+  return window.matchMedia?.('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+}
+
+function applyColorMode(mode: 'light' | 'dark'): void {
+  colorMode = mode;
+  document.documentElement.dataset.theme = mode;
+  document.documentElement.classList.toggle('dark', mode === 'dark');
+  localStorage.setItem('cloudssh_color_mode', mode);
+  terminal.setColorMode(mode);
+
+  document.querySelectorAll('.theme-toggle-icon').forEach((icon) => {
+    icon.textContent = mode === 'dark' ? 'light_mode' : 'dark_mode';
+  });
+}
+
+function toggleColorMode(): void {
+  applyColorMode(colorMode === 'dark' ? 'light' : 'dark');
+}
 
 // ==================== 页面切换 ====================
 
@@ -88,6 +111,12 @@ document.getElementById('disconnect-btn')?.addEventListener('click', () => {
 });
 
 // ==================== 主题切换 ====================
+
+applyColorMode(getInitialColorMode());
+
+document.querySelectorAll('.theme-toggle').forEach((button) => {
+  button.addEventListener('click', toggleColorMode);
+});
 
 document.getElementById('theme-selector')?.addEventListener('change', (e) => {
   const theme = (e.target as HTMLSelectElement).value as any;
