@@ -1,4 +1,4 @@
-﻿import { Terminal } from '@xterm/xterm';
+import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { WebglAddon } from '@xterm/addon-webgl';
@@ -105,9 +105,7 @@ export class SSHTerminal {
 
     this.fit();
 
-    this.terminal.writeln('\x1b[1;33m鈺斺晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晽\x1b[0m');
-    this.terminal.writeln('\x1b[1;33m鈺?     Connecting to CloudSSH      鈺慭x1b[0m');
-    this.terminal.writeln('\x1b[1;33m鈺氣晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨暆\x1b[0m');
+    this.terminal.writeln('\x1b[36mCloudSSH terminal initializing...\x1b[0m');
     this.terminal.writeln('');
   }
 
@@ -141,7 +139,7 @@ export class SSHTerminal {
       };
 
       this.ws.onclose = () => {
-        this.terminal.writeln('\x1b[31m[-] 杩炴帴宸插叧闂璡x1b[0m');
+        this.terminal.writeln('\x1b[31m[-] Connection closed\x1b[0m');
         const statusText = document.getElementById('status-text');
         if (statusText) statusText.innerHTML = '<span class="w-2 h-2 bg-[#353534] inline-block"></span> STATUS: OFFLINE';
       };
@@ -151,8 +149,8 @@ export class SSHTerminal {
   }
 
   /**
-   * 閫氳繃宸插垱寤虹殑 WebSocket 杩炴帴锛堢敤浜?one-time-token 妯″紡锛?
-   * 鏈嶅姟鍣ㄥ凡閫氳繃 token 鑾峰彇鍑嵁锛屾棤闇€鍓嶇鍙戦€?
+   * Connect through an already-created WebSocket.
+   * Used by one-time-token mode; credentials are resolved server-side.
    */
   connectWithWebSocket(ws: WebSocket): void {
     this.lastConfig = null;
@@ -187,7 +185,7 @@ export class SSHTerminal {
           switch (msg.type) {
             case 'status':
               this.terminal.writeln(`\x1b[32m[*] ${msg.message}\x1b[0m`);
-              if (msg.message === '璁よ瘉鎴愬姛') {
+              if (msg.message === '认证成功') {
                 const statusText = document.getElementById('status-text');
                 if (statusText) statusText.innerHTML = '<span class="w-2 h-2 bg-[#3b82f6] inline-block animate-pulse"></span> STATUS: ONLINE';
               }

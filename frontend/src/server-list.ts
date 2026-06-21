@@ -20,7 +20,7 @@ interface ServerConfig {
 }
 
 /**
- * 鐢ㄦ埛绌洪棿 鈥?鏈嶅姟鍣ㄥ垪琛ㄧ鐞嗙粍浠?
+ * User space server-list management component.
  */
 export class ServerList {
   private user: UserInfo;
@@ -46,12 +46,12 @@ export class ServerList {
     this.bindEvents();
     await this.fetchServers();
 
-    // 璁剧疆鐢ㄦ埛绌洪棿鐨勭増鏉冨勾浠?
+    // Set copyright year for user space
     const yearSpan = document.getElementById('user-copyright-year');
     if (yearSpan) yearSpan.textContent = new Date().getFullYear().toString();
   }
 
-  // ==================== 娓叉煋鐢ㄦ埛淇℃伅 ====================
+  // ==================== Render user info ====================
 
   private renderUserInfo(): void {
     const container = document.getElementById('user-info');
@@ -71,28 +71,28 @@ export class ServerList {
     container.append(avatar, username);
   }
 
-  // ==================== 浜嬩欢缁戝畾 ====================
+  // ==================== Event binding ====================
 
   private bindEvents(): void {
-    // 閫€鍑虹櫥褰?
+    // Logout
     document.getElementById('logout-btn')?.addEventListener('click', () => this.logout());
 
-    // 娣诲姞鏈嶅姟鍣ㄦ寜閽?
+    // Add server buttons
     document.getElementById('add-server-btn')?.addEventListener('click', () => this.showModal('add'));
     document.getElementById('empty-add-btn')?.addEventListener('click', () => this.showModal('add'));
 
-    // Modal 鍏抽棴
+    // Modal close
     document.getElementById('modal-close-btn')?.addEventListener('click', () => this.hideModal());
     document.getElementById('modal-backdrop')?.addEventListener('click', () => this.hideModal());
 
-    // Modal 鎻愪氦
+    // Modal submit
     document.getElementById('server-submit-btn')?.addEventListener('click', () => this.handleSubmit());
 
-    // Modal 璁よ瘉鏂瑰紡鍒囨崲
+    // Modal auth-method tabs
     document.getElementById('modal-auth-tab-password')?.addEventListener('click', () => this.setModalAuthMode('password'));
     document.getElementById('modal-auth-tab-key')?.addEventListener('click', () => this.setModalAuthMode('key'));
 
-    // 鍥炶溅鎻愪氦
+    // Submit on Enter
     document.getElementById('server-form')?.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -101,7 +101,7 @@ export class ServerList {
     });
   }
 
-  // ==================== 鏁版嵁鑾峰彇 ====================
+  // ==================== Data fetching ====================
 
   private async fetchServers(): Promise<void> {
     try {
@@ -116,7 +116,7 @@ export class ServerList {
     }
   }
 
-  // ==================== 娓叉煋鏈嶅姟鍣ㄥ崱鐗?====================
+  // ==================== Render server cards ====================
 
   private renderServerGrid(): void {
     const grid = document.getElementById('server-grid');
@@ -137,7 +137,7 @@ export class ServerList {
       .map((server) => this.renderServerCard(server))
       .join('');
 
-    // 缁戝畾鍗＄墖浜嬩欢
+    // Bind card actions
     this.servers.forEach((server) => {
       document.getElementById(`connect-${server.id}`)?.addEventListener('click', () => this.connectServer(server.id));
       document.getElementById(`edit-${server.id}`)?.addEventListener('click', () => this.showModal('edit', server));
@@ -191,7 +191,7 @@ export class ServerList {
     `;
   }
 
-  // ==================== 鏈嶅姟鍣ㄦ搷浣?====================
+  // ==================== Server actions ====================
 
   private async connectServer(serverId: number): Promise<void> {
     const server = this.servers.find((s) => s.id === serverId);
@@ -219,7 +219,7 @@ export class ServerList {
       const { wsUrl } = await res.json() as { wsUrl: string };
       this.onConnect(wsUrl, server.name);
 
-      // 杩炴帴鎴愬姛璺宠浆缁堢鍚庯紝绔嬪嵆鎭㈠鎸夐挳鐨勫師濮嬬姸鎬侊紝浠ヤ究鐢ㄦ埛鏂紑杩炴帴杩斿洖鍚庣湅鍒扮殑鏄甯告寜閽?
+      // Restore the button after switching to the terminal view.
       if (connectBtn) {
         connectBtn.innerHTML = `
           <span class="material-symbols-outlined" style="font-size: 14px;">power_settings_new</span>
@@ -228,8 +228,8 @@ export class ServerList {
         (connectBtn as HTMLButtonElement).disabled = false;
       }
     } catch (e) {
-      alert(`杩炴帴澶辫触: ${e instanceof Error ? e.message : String(e)}`);
-      // 鎭㈠鎸夐挳鐘舵€?
+      alert(`Connection failed: ${e instanceof Error ? e.message : String(e)}`);
+      // Restore button state
       if (connectBtn) {
         connectBtn.innerHTML = `
           <span class="material-symbols-outlined" style="font-size: 14px;">power_settings_new</span>
@@ -244,7 +244,7 @@ export class ServerList {
     const server = this.servers.find((s) => s.id === serverId);
     if (!server) return;
 
-    if (!confirm(`纭鍒犻櫎鏈嶅姟鍣?"${server.name}" ?`)) return;
+    if (!confirm(`Delete server "${server.name}"?`)) return;
 
     try {
       const card = document.getElementById(`card-${serverId}`);
@@ -256,17 +256,17 @@ export class ServerList {
 
       if (!res.ok) throw new Error('Delete failed');
 
-      // 绛夊緟鍔ㄧ敾瀹屾垚鍚庣Щ闄?
+      // Wait for the removal animation to finish
       await new Promise((r) => setTimeout(r, 300));
       this.servers = this.servers.filter((s) => s.id !== serverId);
       this.renderServerGrid();
     } catch (e) {
-      alert(`鍒犻櫎澶辫触: ${e instanceof Error ? e.message : String(e)}`);
+      alert(`Delete failed: ${e instanceof Error ? e.message : String(e)}`);
       await this.fetchServers();
     }
   }
 
-  // ==================== Modal 鎿嶄綔 ====================
+  // ==================== Modal actions ====================
 
   showModal(mode: 'add' | 'edit', server?: ServerConfig): void {
     this.editingServerId = mode === 'edit' && server ? server.id : null;
@@ -276,13 +276,13 @@ export class ServerList {
     const submitBtn = document.getElementById('server-submit-btn');
     if (!modal || !title || !submitBtn) return;
 
-    title.textContent = mode === 'add' ? 'Add Server' : 'EDIT_SERVER';
+    title.textContent = mode === 'add' ? 'Add Server' : 'Edit Server';
     submitBtn.innerHTML = `
       <span class="material-symbols-outlined" style="font-size: 18px;">save</span>
-      ${mode === 'add' ? 'Save server' : 'UPDATE_SERVER'}
+      ${mode === 'add' ? 'Save server' : 'Update server'}
     `;
 
-    // 濉厖琛ㄥ崟
+    // Fill form
     if (mode === 'edit' && server) {
       (document.getElementById('server-name') as HTMLInputElement).value = server.name;
       (document.getElementById('server-host') as HTMLInputElement).value = server.host;
@@ -297,7 +297,7 @@ export class ServerList {
         this.setModalAuthMode('password');
       }
     } else {
-      // 娓呯┖琛ㄥ崟
+      // Clear form
       (document.getElementById('server-name') as HTMLInputElement).value = '';
       (document.getElementById('server-host') as HTMLInputElement).value = '';
       (document.getElementById('server-port') as HTMLInputElement).value = '22';
@@ -310,7 +310,7 @@ export class ServerList {
     modal.classList.remove('hidden');
     modal.classList.add('flex');
 
-    // 鑱氱劍绗竴涓緭鍏ユ
+    // Focus the first input
     setTimeout(() => {
       (document.getElementById('server-name') as HTMLInputElement)?.focus();
     }, 100);
@@ -403,28 +403,28 @@ export class ServerList {
       this.hideModal();
       await this.fetchServers();
     } catch (e) {
-      alert(`淇濆瓨澶辫触: ${e instanceof Error ? e.message : String(e)}`);
+      alert(`Save failed: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       submitBtn.disabled = false;
       submitBtn.innerHTML = `
         <span class="material-symbols-outlined" style="font-size: 18px;">save</span>
-        ${this.editingServerId ? 'UPDATE_SERVER' : 'Save server'}
+        ${this.editingServerId ? 'Update server' : 'Save server'}
       `;
     }
   }
 
-  // ==================== 閫€鍑虹櫥褰?====================
+  // ==================== Logout ====================
 
   private async logout(): Promise<void> {
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
     } catch {
-      // 鍗充娇璇锋眰澶辫触涔熸竻闄ゆ湰鍦扮姸鎬?
+      // Clear local state even if the request fails
     }
     this.onLogout();
   }
 
-  // ==================== 宸ュ叿鍑芥暟 ====================
+  // ==================== Utilities ====================
 
   private escapeHtml(text: string): string {
     const div = document.createElement('div');

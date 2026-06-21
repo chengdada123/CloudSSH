@@ -206,17 +206,17 @@ export class ConnectionForm {
         </div>
         <div class="flex items-center gap-2 mt-2">
           <input type="checkbox" id="remember-me" class="accent-[#3b82f6] w-4 h-4 cursor-pointer">
-          <label for="remember-me" class="text-xs text-[#94a3b8] cursor-pointer select-none">REMEMBER_CONNECTION</label>
+          <label for="remember-me" class="text-xs text-[#94a3b8] cursor-pointer select-none">Remember this connection</label>
         </div>
         <div class="pt-4">
           <button id="connect-btn" class="cyber-button w-full py-3 px-4 text-xs font-bold tracking-[0.1em] uppercase flex items-center justify-center gap-2 bg-[#3b82f6] text-[#ffffff]" type="button">
             <span class="material-symbols-outlined" style="font-size: 18px;">power_settings_new</span>
-            Execute_Connection
+            Connect
           </button>
         </div>
         <div class="flex justify-between items-center mt-4">
           <span id="status-text" class="text-[13px] text-[#94a3b8] flex items-center gap-1">
-            <span class="w-2 h-2 bg-[#353534] inline-block"></span> STATUS: OFFLINE
+            <span class="w-2 h-2 bg-[#353534] inline-block"></span> Offline
           </span>
           <span id="github-login-placeholder"></span>
         </div>
@@ -357,7 +357,7 @@ export class ConnectionForm {
       termSection.classList.add('hidden');
       termSection.classList.remove('flex');
       authSection.classList.remove('hidden');
-      document.getElementById('status-text')!.innerHTML = '<span class="w-2 h-2 bg-[#353534] inline-block"></span> STATUS: OFFLINE';
+      document.getElementById('status-text')!.innerHTML = '<span class="w-2 h-2 bg-[#353534] inline-block"></span> Offline';
     }
   }
 }
