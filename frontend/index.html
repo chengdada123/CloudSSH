@@ -6,7 +6,6 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <title>CloudSSH</title>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
   <script>
   tailwind.config = {
@@ -30,10 +29,10 @@
           "surface-container-lowest": "#0e0e0e"
         },
         fontFamily: {
-          "body": ["JetBrains Mono"],
-          "headline": ["JetBrains Mono"],
-          "label": ["JetBrains Mono"],
-          "code": ["JetBrains Mono"]
+          "body": ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+          "headline": ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+          "label": ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+          "code": ["Cascadia Mono", "Consolas", "SFMono-Regular", "Menlo", "monospace"]
         }
       }
     }
@@ -139,7 +138,7 @@
             <label class="block text-xs font-bold tracking-[0.1em] text-[#94a3b8] mb-2">Server name</label>
             <div class="flex items-center">
               <span class="material-symbols-outlined text-[#94a3b8] mr-2" style="font-size: 16px;">label</span>
-              <input id="server-name" class="terminal-input text-[13px]" placeholder="My Server" type="text" required>
+              <input id="server-name" class="terminal-input text-[13px]" placeholder="" type="text" required>
             </div>
           </div>
           <div class="grid grid-cols-4 gap-4">
@@ -147,14 +146,14 @@
               <label class="block text-xs font-bold tracking-[0.1em] text-[#94a3b8] mb-2">Host address</label>
               <div class="flex items-center">
                 <span class="text-[#94a3b8] mr-2">&gt;</span>
-                <input id="server-host" class="terminal-input text-[13px]" placeholder="192.168.1.1" type="text" required>
+                <input id="server-host" class="terminal-input text-[13px]" placeholder="" type="text" required>
               </div>
             </div>
             <div class="col-span-1">
               <label class="block text-xs font-bold tracking-[0.1em] text-[#94a3b8] mb-2">PORT</label>
               <div class="flex items-center">
                 <span class="text-[#94a3b8] mr-2">:</span>
-                <input id="server-port" class="terminal-input text-[13px]" placeholder="22" type="text" value="22">
+                <input id="server-port" class="terminal-input text-[13px]" placeholder="" type="text">
               </div>
             </div>
           </div>
@@ -162,7 +161,7 @@
             <label class="block text-xs font-bold tracking-[0.1em] text-[#94a3b8] mb-2">Username</label>
             <div class="flex items-center">
               <span class="material-symbols-outlined text-[#94a3b8] mr-2" style="font-size: 16px;">person</span>
-              <input id="server-username" class="terminal-input text-[13px]" placeholder="root" type="text" required>
+              <input id="server-username" class="terminal-input text-[13px]" placeholder="" type="text" required>
             </div>
           </div>
           <div>
@@ -174,11 +173,11 @@
             <div id="modal-password-section">
               <div class="flex items-center">
                 <span class="material-symbols-outlined text-[#94a3b8] mr-2" style="font-size: 16px;">key</span>
-                <input id="server-password" class="terminal-input text-[13px]" placeholder="password" type="password">
+                <input id="server-password" class="terminal-input text-[13px]" placeholder="" type="password">
               </div>
             </div>
             <div id="modal-key-section" style="display:none;">
-              <textarea id="server-private-key" class="terminal-input text-[11px] w-full" rows="4" placeholder="-----BEGIN OPENSSH PRIVATE KEY-----&#10;...paste private key here...&#10;-----END OPENSSH PRIVATE KEY-----" style="resize:vertical;border:1px solid #334155;padding:8px;"></textarea>
+              <textarea id="server-private-key" class="terminal-input text-[11px] w-full" rows="4" placeholder=""></textarea>
             </div>
           </div>
           <div class="pt-2">

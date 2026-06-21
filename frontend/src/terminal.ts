@@ -58,7 +58,7 @@ export class SSHTerminal {
       cursorBlink: true,
       cursorStyle: 'block',
       fontSize: 14,
-      fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", monospace',
+      fontFamily: '"Cascadia Mono", "Consolas", "SFMono-Regular", "Menlo", monospace',
       theme: THEMES.default,
       allowProposedApi: true,
       scrollback: 10000,

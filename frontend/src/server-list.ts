@@ -300,7 +300,7 @@ export class ServerList {
       // Clear form
       (document.getElementById('server-name') as HTMLInputElement).value = '';
       (document.getElementById('server-host') as HTMLInputElement).value = '';
-      (document.getElementById('server-port') as HTMLInputElement).value = '22';
+      (document.getElementById('server-port') as HTMLInputElement).value = '';
       (document.getElementById('server-username') as HTMLInputElement).value = '';
       (document.getElementById('server-password') as HTMLInputElement).value = '';
       (document.getElementById('server-private-key') as HTMLTextAreaElement).value = '';

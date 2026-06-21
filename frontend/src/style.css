@@ -5,7 +5,7 @@
 }
 
 body {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background-color: #0f172a;
   color: #e2e8f0;
   min-height: 100vh;
@@ -19,24 +19,41 @@ body {
 }
 
 .terminal-input {
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid #334155;
-  color: #e2e8f0;
-  font-family: 'JetBrains Mono', monospace;
-  padding: 8px 0;
   width: 100%;
+  padding: 9px 10px;
+  color: #f8fafc;
+  background-color: #0b1220;
+  border: 1px solid #334155;
+  border-radius: 8px;
   outline: none;
-  transition: border-color 0.2s;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
 }
 
 .terminal-input:focus {
-  border-bottom: 1px solid #3b82f6;
-  box-shadow: none;
+  background-color: #111827;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.16);
 }
 
 .terminal-input::placeholder {
-  color: #64748b;
+  color: transparent;
+}
+
+.terminal-input:-webkit-autofill,
+.terminal-input:-webkit-autofill:hover,
+.terminal-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #f8fafc;
+  caret-color: #f8fafc;
+  box-shadow: 0 0 0 1000px #0b1220 inset;
+  border-color: #334155;
+}
+
+textarea.terminal-input {
+  min-height: 96px;
+  resize: vertical;
 }
 
 .blinking-cursor::after {

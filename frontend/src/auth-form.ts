@@ -167,14 +167,14 @@ export class ConnectionForm {
             <label class="block text-xs font-bold tracking-[0.1em] text-[#94a3b8] mb-2">Host address</label>
             <div class="flex items-center">
               <span class="text-[#94a3b8] mr-2">&gt;</span>
-               <input id="host" class="terminal-input text-[13px]" placeholder="192.168.1.1 or 2001:db8::1" type="text" required>
+               <input id="host" class="terminal-input text-[13px]" placeholder="" type="text" required>
             </div>
           </div>
           <div class="col-span-1">
             <label class="block text-xs font-bold tracking-[0.1em] text-[#94a3b8] mb-2">PORT</label>
             <div class="flex items-center">
               <span class="text-[#94a3b8] mr-2">:</span>
-              <input id="port" class="terminal-input text-[13px]" placeholder="22" type="text" value="22">
+              <input id="port" class="terminal-input text-[13px]" placeholder="" type="text">
             </div>
           </div>
         </div>
@@ -182,7 +182,7 @@ export class ConnectionForm {
           <label class="block text-xs font-bold tracking-[0.1em] text-[#94a3b8] mb-2">Username</label>
           <div class="flex items-center">
             <span class="material-symbols-outlined text-[#94a3b8] mr-2" style="font-size: 16px;">person</span>
-            <input id="username" class="terminal-input text-[13px]" placeholder="admin" type="text" required>
+            <input id="username" class="terminal-input text-[13px]" placeholder="" type="text" required>
           </div>
         </div>
         <div>
@@ -194,11 +194,11 @@ export class ConnectionForm {
           <div id="auth-password-section">
             <div class="flex items-center">
               <span class="material-symbols-outlined text-[#94a3b8] mr-2" style="font-size: 16px;">key</span>
-              <input id="password" class="terminal-input text-[13px]" placeholder="••••••••" type="password">
+              <input id="password" class="terminal-input text-[13px]" placeholder="" type="password">
             </div>
           </div>
           <div id="auth-key-section" style="display:none;">
-            <textarea id="private-key" class="terminal-input text-[11px] w-full" rows="5" placeholder="-----BEGIN OPENSSH PRIVATE KEY-----&#10;...paste private key here...&#10;-----END OPENSSH PRIVATE KEY-----" style="resize:vertical;border:1px solid #334155;padding:8px;"></textarea>
+            <textarea id="private-key" class="terminal-input text-[11px] w-full" rows="5" placeholder=""></textarea>
           </div>
         </div>
         <div id="turnstile-container" style="display:none;">
