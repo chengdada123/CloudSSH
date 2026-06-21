@@ -45,7 +45,7 @@ function showAuthSection(): void {
   document.getElementById('server-modal')!.classList.remove('flex');
 
   if (!connectionForm) {
-    connectionForm = new ConnectionForm(terminal);
+    connectionForm = new ConnectionForm();
   }
 }
 
