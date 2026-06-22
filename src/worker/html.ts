@@ -425,13 +425,7 @@ void main() {
         </div>
       </main>
 
-      <!-- Footer -->
-      <footer class="fixed bottom-0 left-0 w-full px-6 py-2 flex justify-between items-center z-50 bg-background/80 backdrop-blur-md border-t border-outline-variant text-xs h-12">
-        <div class="text-secondary-container opacity-60">(c) <span id="copyright-year"></span> CloudSSH - https://github.com/newbietan/CloudSSH</div>
-        <div class="flex gap-4">
-          <a class="text-on-surface-variant opacity-60 hover:opacity-100 transition-opacity" href="https://github.com/newbietan/CloudSSH">Documentation</a>
-        </div>
-      </footer>
+
     </div>
   </div>
 </body>
